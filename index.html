@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 京都秋季之旅</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2d5a47;       /* 抹茶綠：古都沉穩 */
+            --primary-light: #e8f5e9;
+            --accent: #c0392b;         /* 朱紅：伏見稻荷鳥居色 */
+            --bg-body: #f5f3ef;        /* 宣紙色：古都氛圍 */
+            --card-bg: #ffffff;
+            --text-main: #2c2c2c;
+            --text-sub: #6b7280;
+            --border-soft: #e2ddd5;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --pass-gradient: linear-gradient(135deg, #2d5a47 0%, #4a7c6a 100%);
+            --car-gradient: linear-gradient(135deg, #92400e 0%, #b45309 100%);
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-body);
+            background-image: radial-gradient(#d6cfc4 1px, transparent 1px);
+            background-size: 22px 22px;
+            color: var(--text-main);
+            line-height: 1.75;
+            -webkit-font-smoothing: antialiased;
+            transition: font-size 0.3s ease;
+        }
+
+        body.large-text { font-size: 1.15rem; }
+        body.large-text h1 { font-size: 2rem; }
+        body.large-text .subtitle { font-size: 1rem; }
+        body.large-text .nav-btn { font-size: 1.05rem; padding: 10px 18px; }
+        body.large-text .card-title { font-size: 1.4rem; }
+
+        /* --- Header --- */
+        header {
+            background: rgba(245, 243, 239, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 24px 20px 14px;
+            text-align: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 10;
+        }
+        h1 {
+            font-family: 'Shippori Mincho', serif;
+            margin: 0;
+            font-size: 1.7rem;
+            color: var(--primary);
+            letter-spacing: 0.06em;
+        }
+        .subtitle {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 4px 14px;
+            background: rgba(45, 90, 71, 0.1);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .group-info {
+            margin-top: 8px;
+            font-size: 0.82rem;
+            color: var(--text-sub);
+        }
+
+        /* --- Weather Widget --- */
+        .weather-widget {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            background: linear-gradient(to right, #ffffff, #f0fdf4);
+            border: 1px solid #bbf7d0;
+            padding: 9px 18px;
+            border-radius: 50px;
+            margin-top: 13px;
+            box-shadow: 0 4px 12px rgba(185, 243, 208, 0.35);
+            font-size: 0.92rem;
+            color: #166534;
+            font-weight: 600;
+        }
+        .weather-date {
+            font-size: 0.78rem;
+            color: #64748b;
+            font-weight: normal;
+            margin-right: 4px;
+            background: #e2e8f0;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        .weather-item { display: flex; align-items: center; gap: 5px; }
+        .weather-divider { width: 1px; height: 16px; background-color: #d1d5db; }
+        .weather-fade { animation: weatherChange 0.4s ease-in-out; }
+        @keyframes weatherChange {
+            0% { opacity: 0.4; transform: translateY(5px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Navigation --- */
+        .nav-container {
+            background: rgba(245, 243, 239, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 11px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-sm);
+            border-bottom: 1px solid rgba(255,255,255,0.5);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .nav-tabs {
+            display: flex;
+            gap: 6px;
+            padding: 0 16px;
+            min-width: max-content;
+        }
+        .nav-btn {
+            background: white;
+            border: 1.5px solid var(--border-soft);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-sub);
+            cursor: pointer;
+            transition: all 0.25s;
+            white-space: nowrap;
+        }
+        .nav-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .nav-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 10px rgba(45, 90, 71, 0.3);
+        }
+
+        /* --- Container --- */
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 28px 16px 60px;
+        }
+
+        /* --- Day Content --- */
+        .day-content { display: none; }
+        .day-content.active { display: block; }
+
+        /* --- Hotel Block --- */
+        .hotel-block {
+            background: linear-gradient(120deg, #ffffff 0%, #f0fdf4 100%);
+            border-radius: 20px;
+            padding: 22px;
+            margin-bottom: 36px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(255,255,255,0.8);
+            position: relative;
+            overflow: hidden;
+        }
+        .hotel-block::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 5px; height: 100%;
+            background: var(--accent);
+        }
+        .hotel-title {
+            font-family: 'Shippori Mincho', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+        .hotel-desc { font-size: 0.92rem; color: var(--text-sub); margin-bottom: 14px; }
+        .hotel-btn {
+            display: inline-flex;
+            align-items: center;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 7px 15px;
+            border-radius: 50px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 10px rgba(45, 90, 71, 0.2);
+        }
+        .hotel-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(45, 90, 71, 0.3); }
+
+        /* --- Timeline --- */
+        .timeline-wrapper {
+            position: relative;
+            padding-left: 24px;
+            border-left: 2px dashed #c9c2b8;
+            margin-left: 10px;
+        }
+
+        /* --- Cards --- */
+        .card {
+            background: var(--card-bg);
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(226, 221, 213, 0.7);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(192, 57, 43, 0.25);
+        }
+        .card::after {
+            content: '';
+            position: absolute;
+            left: -31px;
+            top: 26px;
+            width: 12px;
+            height: 12px;
+            background: var(--bg-body);
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.9);
+            transition: border-color 0.3s;
+        }
+        .card:hover::after { border-color: var(--accent); background: var(--accent); }
+
+        .card.evening {
+            background: linear-gradient(135deg, #fafaf9 0%, #f5f5f4 100%);
+            border-color: #d6d3d1;
+        }
+        .card.evening::after { border-color: #78716c; background: #78716c; }
+
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .time-badge {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 8px;
+            letter-spacing: 0.4px;
+        }
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 0 0 7px 0;
+            color: var(--text-main);
+            line-height: 1.35;
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: 0.68rem;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+            vertical-align: middle;
+            margin-left: 7px;
+        }
+        .tag-transport { background: #fff7ed; color: #c2410c; }
+        .tag-car { background: #fef3c7; color: #92400e; }
+        .tag-optional { background: #fce7f3; color: #be185d; }
+
+        .desc { font-size: 0.95rem; color: var(--text-sub); margin-bottom: 10px; line-height: 1.7; }
+        .desc strong { color: var(--text-main); font-weight: 600; }
+        .desc em {
+            display: block;
+            margin-top: 8px;
+            font-style: normal;
+            font-size: 0.88rem;
+            color: #6b7280;
+            background: #f5f5f4;
+            padding: 9px 13px;
+            border-radius: 10px;
+            border-left: 3px solid var(--primary-light);
+        }
+
+        .map-link {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+            margin-top: 5px;
+            padding: 5px 11px;
+            border-radius: 8px;
+            background: rgba(45, 90, 71, 0.06);
+            transition: all 0.2s;
+        }
+        .map-link:hover { background: var(--primary); color: white; }
+        .map-link::before { content: '📍'; margin-right: 5px; font-size: 0.95rem; }
+
+        /* --- Pass / Car Info --- */
+        .pass-info {
+            background: var(--pass-gradient);
+            color: white;
+            padding: 11px 16px;
+            border-radius: 14px;
+            margin-bottom: 24px;
+            font-weight: 700;
+            font-size: 0.93rem;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(45, 90, 71, 0.3);
+            animation: fadeIn 0.7s ease-out;
+        }
+        .pass-info::before { content: '🚇'; margin-right: 9px; font-size: 1.15rem; }
+
+        .pass-info.car {
+            background: var(--car-gradient);
+            box-shadow: 0 4px 12px rgba(146, 64, 14, 0.3);
+        }
+        .pass-info.car::before { content: '🚗'; }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 36px 20px;
+            color: #9ca3af;
+            font-size: 0.82rem;
+            background: white;
+            border-top: 1px solid var(--border-soft);
+        }
+
+        /* --- Zoom Button --- */
+        #zoom-btn {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.22);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+            background: linear-gradient(135deg, #2d5a47 0%, #4a7c6a 100%);
+            font-family: serif;
+        }
+        #zoom-btn:hover { transform: scale(1.1); }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.45rem; }
+            .container { padding: 20px 12px 70px; }
+            .card { padding: 16px; margin-bottom: 18px; }
+            .timeline-wrapper { padding-left: 16px; margin-left: 8px; }
+            .card::after { left: -25px; }
+            .weather-widget { width: 90%; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>2026 京都秋季之旅</h1>
+    <div class="subtitle">11/19（四）— 11/23（一）</div>
+    <div class="group-info">👥 8 人 · 朋友旅行</div>
+    <div class="weather-widget" id="weatherWidget">
+        <span class="weather-date" id="weatherDate">Day 1</span>
+        <div class="weather-item">
+            <span id="weatherIcon">🍁</span>
+            <span id="weatherText">預測中...</span>
+        </div>
+        <div class="weather-divider"></div>
+        <div class="weather-item">
+            <span>🌡️</span>
+            <span id="weatherTemp">--°C</span>
+        </div>
+        <div class="weather-divider"></div>
+        <div class="weather-item">
+            <span>☔</span>
+            <span id="rainProb">--%</span>
+        </div>
+    </div>
+</header>
+
+<div class="nav-container">
+    <div class="nav-tabs" id="navTabs">
+        <button class="nav-btn active" onclick="showDay(1)">Day 1 抵達</button>
+        <button class="nav-btn" onclick="showDay(2)">Day 2 和服</button>
+        <button class="nav-btn" onclick="showDay(3)">Day 3 嵐山</button>
+        <button class="nav-btn" onclick="showDay(4)">Day 4 返程</button>
+        <button class="nav-btn" onclick="showDay(5)">Day 5 回家</button>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- ═══════════════ DAY 1 ═══════════════ -->
+    <div id="day1" class="day-content active">
+
+        <div class="hotel-block">
+            <div class="hotel-title">🏨 今晚住宿：The Royal Park Hotel Iconic Kyoto</div>
+            <div class="hotel-desc">
+                下午抵達後先 check in，寄放行李後輕裝遊玩。<br>
+                晚餐後叫 Uber 前往西陣別邸民宿。
+            </div>
+            <a href="https://maps.app.goo.gl/dC5dhzFW7utoTWd88?g_st=ic" target="_blank" class="hotel-btn">📍 導航至 Royal Park Hotel</a>
+        </div>
+
+        <div class="timeline-wrapper">
+
+            <div class="card">
+                <span class="time-badge">06:30 – 11:35</span>
+                <div class="card-title">🛫 分批抵達關西機場（KIX）</div>
+                <div class="desc">
+                    <strong>參考航班：</strong><br>
+                    長榮 BR178 TPE 06:30 → KIX 09:55<br>
+                    虎航 IT210 TPE 06:55 → KIX 10:40<br>
+                    華航 CI156 TPE 08:05 → KIX 11:35
+                </div>
+            </div>
+
+            <div class="card">
+                <span class="time-badge">下午</span>
+                <div class="card-title">🏨 Check in：The Royal Park Hotel Iconic Kyoto</div>
+                <div class="desc">寄放行李，領取護身符後輕裝出發。</div>
+                <a href="https://maps.app.goo.gl/dC5dhzFW7utoTWd88?g_st=ic" target="_blank" class="map-link">Royal Park Hotel Iconic Kyoto</a>
+            </div>
+
+            <div class="card">
+                <span class="time-badge">午餐</span>
+                <div class="card-title">🍜 麵屋優光 <span class="tag tag-optional">排隊店・只收現金</span></div>
+                <div class="desc">超人氣排隊拉麵店，建議提早去避免久候。只收現金，請留意。</div>
+                <a href="https://maps.app.goo.gl/2d1dU8pftKuTxxH6A?g_st=ic" target="_blank" class="map-link">麵屋優光</a>
+            </div>
+
+            <div class="card">
+                <span class="time-badge">下午</span>
+                <div class="card-title">⛩️ 下鴨神社（楓葉護身符）</div>
+                <div class="desc">京都最古老的神社之一，秋季可求楓葉護身符。環境清幽，適合慢步。</div>
+                <a href="https://maps.app.goo.gl/VPeMis9h1wXsmu3JA?g_st=ic" target="_blank" class="map-link">下鴨神社</a>
+            </div>
+
+            <div class="card">
+                <span class="time-badge">下午</span>
+                <div class="card-title">🍁 天授庵・永觀堂（禪林寺）</div>
+                <div class="desc">京都賞楓名所，特別觀賞永觀堂的回首觀音與滿山紅葉。</div>
+                <a href="https://maps.app.goo.gl/GnVcVdDEdPVvqgHT6?g_st=ic" target="_blank" class="map-link">天授庵</a>
+                <a href="https://maps.app.goo.gl/GCiwV5Do5XStUvHv5?g_st=ic" target="_blank" class="map-link" style="margin-left:6px;">永觀堂</a>
+            </div>
+
+            <div class="card evening">
+                <span class="time-badge">晚餐</span>
+                <div class="card-title">🍽️ 晚餐</div>
+                <div class="desc">在市區餐廳享用，建議選擇方便移動的位置。</div>
+            </div>
+
+            <div class="card evening">
+                <span class="time-badge">晚間</span>
+                <div class="card-title">🚗 叫 Uber 前往西陣別邸</div>
+                <div class="desc">取行李後叫 Uber 移動至 Kyo no Ondokoro Nishijin-Villa #5。</div>
+                <a href="https://maps.app.goo.gl/9Az8b25grsfkhKRy6?g_st=ic" target="_blank" class="map-link">Kyo no Ondokoro 西陣別邸 #5</a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ═══════════════ DAY 2 ═══════════════ -->
+    <div id="day2" class="day-content">
+
+        <div class="pass-info">
+            今日交通：地鐵 + 步行 / 晚餐後租車 🚗
+        </div>
+
+        <div class="hotel-block">
+            <div class="hotel-title">🏠 今晚住宿：Kyo no Ondokoro 西陣別邸 #5</div>
+            <div class="hotel-desc">
+                和服體驗後還衣，傍晚取車開回西陣別邸。<br>
+                晚餐：焼肉ダイニング甲（19:30）
+            </div>
+            <a href="https://maps.app.goo.gl/9Az8b25grsfkhKRy6?g_st=ic" target="_blank" class="hotel-btn">📍 西陣別邸 #5</a>
+        </div>
+
+        <div class="timeline-wrapper">
+
+            <div class="card">
+                <span class="time-badge">09:00 / 09:30</span>
+                <div class="card-title">👘 穿和服：璃光和服 八坂店</div>
+                <div class="desc">
+                    <strong>預約時間：</strong>09:00（2位）/ 09:30（6位）<br>
+                    建議提早抵達，有充足時間換裝與拍照。
+                </div>
+                <a href="https://maps.app.goo.gl/otBaR1FWC5GDRVHL9?g_st=ic" target="_blank" class="map-link">璃光和服 八坂店</a>
+            </div>
+
+            <div class="card">
+                <span class="time-badge">上午 – 下午</span>
+                <div class="card-title">🏯 二寧坂（二年坂）・三年坂</div>
+                <div class="desc">穿和服漫步石板古道，逛特色小店、買抹茶道具與伴手禮。</div>
+                <a href="https://maps.app.goo.gl/WtefdUK3qfovzUjE7?g_st=ic" target="_blank" class="map-link">二年坂・三年坂</a>
+            </div>
+
+            <div class="card">
+                <span class="time-badge">午餐</span>
+                <div class="card-title">🍴 午餐</div>
+                <div class="desc">在祇園一帶享用，選擇多元。</div>
+            </div>
+
+            <div class="card">
+                <span class="time-badge">17:30 前</span>
+                <div class="card-title">👘 璃光和服 八坂店還和服</div>
+                <div class="desc">請留意時間，務必在 17:30 前完成歸還。</div>
+            </div>
+
+            <div class="card">
+                <span class="time-badge">傍晚</span>
+                <div class="card-title">🛍️ 京都車站逛街</div>
+                <div class="desc">在京都車站附近購買伴手禮、逛電子商場或 BIG CAMERA。</div>
+                <a href="https://maps.app.goo.gl/YiS2EaRYMizijWEZ8?g_st=ic" target="_blank" class="map-link">京都車站</a>
+            </div>
+
+            <div class="card">
+                <span class="time-badge">17:00</span>
+                <div class="card-title">🚗 ORIX 取車 <span class="tag tag-car">Nissan Serena</span></div>
+                <div class="desc">
+                    <strong>取車地點：</strong>ORIX 租車（<a href="https://maps.app.goo.gl/epDvCT9onmDrSNd26?g_st=ic" target="_blank">📍 導航</a>）<br>
+                    車型：Nissan Serena（8人座），11/20–11/22 共三天。
+                </div>
+            </div>
+
+            <div class="card evening">
+                <span class="time-badge">19:30</span>
+                <div class="card-title">🥩 晚餐：焼肉ダイニング甲</div>
+                <div class="desc">京都知名燒肉店，建議提前預約。</div>
+                <a href="https://maps.app.goo.gl/ruwgjMyZaUExXnGQ8?g_st=ic" target="_blank" class="map-link">焼肉ダイニング甲</a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ═══════════════ DAY 3 ═══════════════ -->
+    <div id="day3" class="day-content">
+
+        <div class="pass-info car">
+            今日交通：自駕（ Nissan Serena）🚗 · 嵐山 → 天橋立
+        </div>
+
+        <div class="hotel-block">
+            <div class="hotel-title">🏠 今晚住宿：Kyo no Ondokoro 西陣別邸 #5</div>
+            <div class="hotel-desc">西陣別邸出發，晚間回程約 2 小時。</div>
+        </div>
+
+        <div class="timeline-wrapper">
+
+            <div class="card">
+                <span class="time-badge">06:00 出發</span>
+                <div class="card-title">🌄 早起出发嵐山 <span class="tag tag-transport">車程約 30 分</span></div>
+                <div class="desc">06:30–07:00 抵達嵐山，停車場費用秋季每 30 分 ¥300。</div>
+                <a href="https://maps.app.goo.gl/foygPh77yTzEiL7Y7?g_st=ic" target="_blank" class="map-link">嵐山停車場</a>
+            </div>
+
+            <div class="card">
+                <span class="time-badge">早上</span>
+                <div class="card-title">🌉 渡月橋散步</div>
+                <div class="desc">清晨的渡月橋人少景美，沿河畔漫步感受嵐山氛圍。</div>
+            </div>
+
+            <div class="card">
+                <span class="time-badge">08:30 – 09:00</span>
+                <div class="card-title">🚣 保津川下り（保津川遊船）着船場</div>
+                <div class="desc">搭乘遊船順流而下，欣賞峽谷紅葉美景。<br>
+                <em>※ 此為着船場（非乘船處），乘船入口請由小火車龜岡站方向前往。</em></div>
+                <a href="https://maps.app.goo.gl/vUnfkrbf6zy4R7up7?g_st=ic" target="_blank" class="map-link">保津川下り 着船場</a>
+            </div>
+
+            <div class="card">
+                <span class="time-badge">09:00 – 11:00</span>
+                <div class="card-title">🚃 嵯峨野觀光小火車（龜岡 → 嵯峨）</div>
+                <div class="desc">
+                    步行至【小火車龜岡車站】（30分）→ 搭乘 JR 至【馬堀站】（7分）→ 步行至龜岡車站（15分）→ 搭小火車 10:30 發車 → 抵達【嵯峨站】約 11:00。<br>
+                    <em>※ 步行時間較長，建議穿好走的鞋。</em>
+                </div>
+            </div>
+
+            <div class="card">
+                <span class="time-badge">午餐</span>
+                <div class="card-title">🍴 嵐山午餐</div>
+                <div class="desc">嵐山地區有眾多餐廳，可品嚐湯豆腐或嵐山湯豆腐料理。</div>
+            </div>
+
+            <div class="card">
+                <span class="time-badge">13:00 出發</span>
+                <div class="card-title">🚗 開車前往天橋立 <span class="tag tag-transport">車程約 2 小時</span></div>
+                <div class="desc">下午抵達天橋立，車程約 2 小時。</div>
+                <a href="https://maps.app.goo.gl/VtkrHsm4gMiy8mYC8?g_st=ic" target="_blank" class="map-link">天橋立</a>
+            </div>
+
+            <div class="card">
+                <span class="time-badge">15:00</span>
+                <div class="card-title">🚠 天橋立纜車 + 園區 <span class="tag tag-transport">票價 ¥1000 含來回纜車+入園</span></div>
+                <div class="desc">
+                    纜車上山頂約 6 分鐘。山頂可俯瞰天橋立沙洲絕景。<br>
+                    停車場：¥700（只收現金）
+                </div>
+                <a href="https://maps.app.goo.gl/VtkrHsm4gMiy8mYC8?g_st=ic" target="_blank" class="map-link">天橋立纜車</a>
+            </div>
+
+            <div class="card">
+                <span class="time-badge">下午 – 晚餐</span>
+                <div class="card-title">🦐 天橋立園區漫步 + 海鮮晚餐</div>
+                <div class="desc">園區內品嚐海鮮料理，欣賞黄昏與夜晚的天橋立風光。</div>
+            </div>
+
+            <div class="card evening">
+                <span class="time-badge">18:30</span>
+                <div class="card-title">🚗 啟程返回西陣別邸 <span class="tag tag-transport">車程約 2 小時</span></div>
+                <div class="desc">建議 18:30 前離開，約 20:30–21:00 回到民宿。</div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ═══════════════ DAY 4 ═══════════════ -->
+    <div id="day4" class="day-content">
+
+        <div class="pass-info">
+            今日交通：自駕 → 還車 → JR 新快速 + 地鐵御堂筋線 🚇
+        </div>
+
+        <div class="timeline-wrapper">
+
+            <div class="card">
+                <span class="time-badge">09:00</span>
+                <div class="card-title">🚗 整理行李出發</div>
+                <div class="desc">
+                    9 人分批行動：<br>
+                    ① 開車組：載行李至京都車站（單趟 15 分）<br>
+                    ② 計程車組：其餘成員搭計程車同行
+                </div>
+            </div>
+
+            <div class="card">
+                <span class="time-badge">上午</span>
+                <div class="card-title">🚗 ORIX 還車</div>
+                <div class="desc">
+                    抵達京都車站後，開車組先還車，再與計程車組於車站會合。<br>
+                    <em>還車地點：</em><a href="https://maps.app.goo.gl/epDvCT9onmDrSNd26?g_st=ic" target="_blank">📍 ORIX 租車</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <span class="time-badge">上午</span>
+                <div class="card-title">🛒 京都車站買早餐 + 最後採買</div>
+                <div class="desc">在車站內超市或麵包店購買路上吃的早餐與伴手禮。</div>
+                <a href="https://maps.app.goo.gl/Vn5ZQPB9nvkXo7bN9?g_st=ic" target="_blank" class="map-link">京都車站</a>
+            </div>
+
+            <div class="card">
+                <span class="time-badge">中午</span>
+                <div class="card-title">🚄 京都 → 大阪難波（JR 新快速 / JR 快速 + 地鐵御堂筋線）</div>
+                <div class="desc">
+                    搭乘 JR 新快速至大阪站，轉地鐵御堂筋線（紅線）至難波站。<br>
+                    <em>※ 行李較多，建議搭乘電梯或使用行李寄送服務。</em>
+                </div>
+            </div>
+
+            <div class="card">
+                <span class="time-badge">下午</span>
+                <div class="card-title">🏨 Check in：Meander Osaka <span class="tag tag-optional">寄放行李</span></div>
+                <div class="desc">抵達後先寄放行李，隨即原地解散自由活動。</div>
+                <a href="https://maps.app.goo.gl/owTuTTKKhEfty4H26?g_st=ic" target="_blank" class="map-link">Meander Osaka</a>
+            </div>
+
+            <div class="card evening">
+                <span class="time-badge">下午 – 晚間</span>
+                <div class="card-title">🗾 原地解散自由活動</div>
+                <div class="desc">
+                    推薦行程：<br>
+                    • 道頓堀・心齋橋逛街<br>
+                    • 黑門市場覓食<br>
+                    • 新世界・通天閣
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ═══════════════ DAY 5 ═══════════════ -->
+    <div id="day5" class="day-content">
+
+        <div class="pass-info">
+            今日交通：各自前往關西機場（KIX）✈️
+        </div>
+
+        <div class="hotel-block">
+            <div class="hotel-title">🏨 住宿：Meander Osaka（續住）</div>
+            <div class="hotel-desc">上午自由活動，各自安排時間前往機場。</div>
+        </div>
+
+        <div class="timeline-wrapper">
+
+            <div class="card">
+                <span class="time-badge">上午</span>
+                <div class="card-title">🛍️ 最後逛街・早餐</div>
+                <div class="desc">把握最後幾小時，在難波一帶最後補貨或吃早餐。</div>
+            </div>
+
+            <div class="card">
+                <span class="time-badge">適時出發</span>
+                <div class="card-title">🚗 前往關西機場（KIX）</div>
+                <div class="desc">
+                    <strong>⚠️ 重要提醒：</strong><br>
+                    日本自 2023 年 10 月起退稅改為<strong>出境機場退稅</strong>，非市區免稅店。<br>
+                    關西機場已更新免稅店資訊並增設迪士尼免稅店。<br>
+                    <em>請提早再提早到機場，留充足時間退稅與最後採買！</em>
+                </div>
+            </div>
+
+            <div class="card evening">
+                <span class="time-badge">起飛</span>
+                <div class="card-title">✈️ 各自返程</div>
+                <div class="desc">祝您旅途平安，新年快樂！🎊</div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <p>🍁 2026 京都秋季之旅 · 8 人朋友旅行</p>
+    <p>祝旅途愉快！</p>
+</footer>
+
+<!-- Zoom Button -->
+<button id="zoom-btn" onclick="toggleZoom()">A+</button>
+
+<script>
+    // ── November Kyoto Weather (mock) ──
+    const dailyWeather = {
+        1: { icon: '🍁', text: '晴偶雲', temp: '15°C', rain: '10%', note: '初秋涼爽' },
+        2: { icon: '☁️', text: '多雲', temp: '14°C', rain: '20%', note: '和服日，注意保暖' },
+        3: { icon: '🌤️', text: '晴時多雲', temp: '16°C', rain: '15%', note: '嵐山天橋立好天氣' },
+        4: { icon: '☁️', text: '多雲', temp: '15°C', rain: '25%', note: '大阪天氣不錯' },
+        5: { icon: '☀️', text: '晴朗', temp: '16°C', rain: '5%', note: '完美返程日' }
+    };
+
+    function showDay(dayNum) {
+        document.querySelectorAll('.day-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+
+        const selectedDay = document.getElementById('day' + dayNum);
+        if (selectedDay) selectedDay.classList.add('active');
+
+        const buttons = document.querySelectorAll('.nav-btn');
+        if (buttons[dayNum - 1]) buttons[dayNum - 1].classList.add('active');
+
+        updateWeather(dayNum);
+
+        const activeBtn = buttons[dayNum - 1];
+        const container = document.querySelector('.nav-tabs');
+        if (activeBtn && container) {
+            const scrollLeft = activeBtn.offsetLeft - (container.offsetWidth / 2) + (activeBtn.offsetWidth / 2);
+            container.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateWeather(dayNum) {
+        const widget = document.getElementById('weatherWidget');
+        const data = dailyWeather[dayNum];
+        widget.classList.remove('weather-fade');
+        void widget.offsetWidth;
+        widget.classList.add('weather-fade');
+        if (data) {
+            document.getElementById('weatherDate').textContent = 'Day ' + dayNum;
+            document.getElementById('weatherIcon').textContent = data.icon;
+            document.getElementById('weatherText').textContent = data.text;
+            document.getElementById('weatherTemp').textContent = data.temp;
+            document.getElementById('rainProb').textContent = data.rain;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => { updateWeather(1); });
+
+    function toggleZoom() {
+        document.body.classList.toggle('large-text');
+        const btn = document.getElementById('zoom-btn');
+        if (document.body.classList.contains('large-text')) {
+            btn.textContent = 'A−';
+            btn.style.background = 'linear-gradient(135deg, #78716c 0%, #57534e 100%)';
+        } else {
+            btn.textContent = 'A+';
+            btn.style.background = 'linear-gradient(135deg, #2d5a47 0%, #4a7c6a 100%)';
+        }
+    }
+</script>
+
+</body>
+</html>
