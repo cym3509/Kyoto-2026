@@ -798,13 +798,13 @@
 <button id="zoom-btn" onclick="toggleZoom()">A+</button>
 
 <script>
-    // ── November Kyoto Weather (mock) ──
+    // ── Kyoto Weather (met.no forecast, fetched 2026-11-14) ──
     const dailyWeather = {
-        1: { icon: '☀️', text: '晴朗',   temp: '17°C', rain: '0%',  note: '抵達日，好天氣' },
-        2: { icon: '🌤️', text: '晴時多雲', temp: '16°C', rain: '5%',  note: '和服日，天氣絕佳' },
-        3: { icon: '☀️', text: '晴朗',   temp: '18°C', rain: '0%',  note: '嵐山天橋立，出發' },
-        4: { icon: '☀️', text: '晴朗',   temp: '19°C', rain: '0%',  note: '大阪天氣完美' },
-        5: { icon: '☀️', text: '晴朗',   temp: '18°C', rain: '0%',  note: '完美返程日' }
+        1: { icon: '☀️', text: '晴朗',     temp: '8–14°C',  rain: '0%',  note: '抵達日，萬里晴空' },
+        2: { icon: '🌤️', text: '晴時多雲', temp: '6–12°C',  rain: '10%', note: '和服日，微涼注意保暖' },
+        3: { icon: '☀️', text: '晴朗',     temp: '6–12°C',  rain: '0%',  note: '嵐山天橋立，晴空' },
+        4: { icon: '🌤️', text: '晴時多雲', temp: '3–10°C',  rain: '0%',  note: '大阪天氣不錯，早晚偏冷' },
+        5: { icon: '☁️', text: '多雲',     temp: '1–12°C',  rain: '0%',  note: '返程日，多雲但無雨' }
     };
 
     function showDay(dayNum) {
